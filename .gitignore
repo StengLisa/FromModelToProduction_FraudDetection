@@ -3,3 +3,5 @@ data/
 models/
 mlruns/
 mlflow.db
+.ipynb_checkpoints/
+
