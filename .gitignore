@@ -1,0 +1,5 @@
+# Ignore datasets and large artifacts
+data/
+models/
+mlruns/
+mlflow.db
