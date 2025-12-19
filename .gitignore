@@ -1,7 +1,28 @@
-# Ignore datasets and large artifacts
+# macOS system files
+.DS_Store
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data
 data/
-models/
+*.csv
+*.parquet
+
+# MLflow
 mlruns/
 mlflow.db
-.ipynb_checkpoints/
+
+# Models
+models/
+*.joblib
+*.pkl
+
+# Virtual environments
+venv/
+.env/
 
