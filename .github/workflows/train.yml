@@ -1,0 +1,43 @@
+name: Monthly Training and Drift-Based Retraining
+
+on:
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "Month to simulate (0-12). Use -1 to simulate full year."
+        required: true
+        default: "0"
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run training for a single month
+        if: ${{ inputs.month != '-1' }}
+        run: |
+          echo "Running training for month ${{ inputs.month }}"
+          python -m src.pipeline_train --month ${{ inputs.month }} --drift-threshold 0.05
+
+      - name: Run full 12-month simulation
+        if: ${{ inputs.month == '-1' }}
+        run: |
+          echo "Running full year simulation"
+          for i in {0..12}; do
+            echo "=== Running month $i ==="
+            python -m src.pipeline_train --month $i --drift-threshold 0.05
+          done
+
