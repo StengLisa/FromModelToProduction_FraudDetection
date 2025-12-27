@@ -83,7 +83,7 @@ def main(month, drift_threshold):
     Path("artifacts").mkdir(exist_ok=True)
 
     # Load data
-    base_df = pd.read_csv("data/fraud_transactions.csv")
+    base_df = pd.read_csv("data/fraud_transactions_small.csv")
 
     if month == 0:
         # Compute baseline stats on features
