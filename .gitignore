@@ -9,7 +9,7 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Data but keep the artifacts folder and the files inside + dataset for GitHub Actions
-data/
+data/*
 *.csv
 *.parquet
 !artifacts/
