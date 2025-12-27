@@ -92,7 +92,7 @@ def main(month, drift_threshold):
 
         # Train baseline model
         run_training(
-            data_path="data/fraud_transactions.csv",
+            data_path="data/fraud_transactions_small.csv",
             register_name="fraud_model",
             threshold_config="config/threshold.json",
             retrain_reason="baseline"
