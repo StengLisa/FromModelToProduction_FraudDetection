@@ -8,13 +8,14 @@ __pycache__/
 # Jupyter
 .ipynb_checkpoints/
 
-# Data but keep the artifacts folder and the files inside
+# Data but keep the artifacts folder and the files inside + dataset for GitHub Actions
 data/
 *.csv
 *.parquet
 !artifacts/
 !artifacts/*.csv
 !artifacts/*.parquet
+!data/fraud_transactions_small.csv
 
 # MLflow
 mlruns/
