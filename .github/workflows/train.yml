@@ -28,6 +28,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Determine month
+        id: set-month
+	run: | 
+	  if [ "${{ github.event_name }}" = "schedule" ]; then
+            # Scheduled run → compute month automatically
+            echo "month=$(date +%-m)" >> $GITHUB_OUTPUT
+          else
+            # Manual run → use input
+            echo "month=${{ github.event.inputs.month }}" >> $GITHUB_OUTPUT
+          fi	
+
       - name: Run training for a single month
         if: ${{ inputs.month != '-1' }}
         run: |
