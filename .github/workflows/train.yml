@@ -52,5 +52,29 @@ jobs:
           for i in {0..12}; do
             echo "=== Running month $i ==="
             python -m src.pipeline_train --month $i --drift-threshold 0.05
-          done
+        done
+
+      - name: Upload trained model
+        uses: actions/upload-artifact@v3
+        with:
+          name: trained-model
+          path: models/fraud_model.joblib
+
+      - name: Upload threshold
+        uses: actions/upload-artifact@v3
+        with:
+          name: threshold
+          path: config/threshold.json
+
+      - name: Upload drift log
+        uses: actions/upload-artifact@v3
+        with:
+          name: drift-log
+          path: artifacts/drift_log.csv
+
+      - name: Upload baseline stats
+        uses: actions/upload-artifact@v3
+        with:
+          name: baseline-stats
+          path: artifacts/baseline_stats.parquet
 
