@@ -22,9 +22,9 @@ mlruns/
 mlflow.db
 
 # Models
-models/
-*.joblib
-*.pkl
+#models/
+#*.joblib
+#*.pkl
 
 # Virtual environments
 venv/
