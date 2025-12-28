@@ -55,25 +55,25 @@ jobs:
           done
  
       - name: Upload trained model
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: trained-model
           path: models/fraud_model.joblib
 
       - name: Upload threshold
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: threshold
           path: config/threshold.json
 
       - name: Upload drift log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: drift-log
           path: artifacts/drift_log.csv
 
       - name: Upload baseline stats
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: baseline-stats
           path: artifacts/baseline_stats.parquet
