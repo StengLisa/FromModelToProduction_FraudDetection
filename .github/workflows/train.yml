@@ -52,8 +52,8 @@ jobs:
           for i in {0..12}; do
             echo "=== Running month $i ==="
             python -m src.pipeline_train --month $i --drift-threshold 0.05
-        done
-
+          done
+ 
       - name: Upload trained model
         uses: actions/upload-artifact@v3
         with:
