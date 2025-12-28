@@ -30,12 +30,12 @@ jobs:
 
       - name: Determine month
         id: set-month
-	run: | 
-	  if [ "${{ github.event_name }}" = "schedule" ]; then
-            # Scheduled run → compute month automatically
+        run: | 
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # Scheduled run → compute month automaticall
             echo "month=$(date +%-m)" >> $GITHUB_OUTPUT
           else
-            # Manual run → use input
+            # Manual run → use inpu
             echo "month=${{ github.event.inputs.month }}" >> $GITHUB_OUTPUT
           fi	
 
