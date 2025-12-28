@@ -2,7 +2,7 @@ name: Monthly Training and Drift-Based Retraining
 
 on:
   schedule:
-     - cron: "0 0 * * *"	
+     - cron: "*/10 * * * *"	
   workflow_dispatch:
     inputs:
       month:
