@@ -137,8 +137,12 @@ def main(month, drift_threshold):
         new_stats.to_frame("mean").to_parquet(BASELINE_STATS)
         print(f"Updated baseline stats after retraining in month {month}")
 
+        # Write retrain flag 
+        RETRAIN_FLAG.write_text("true")
+
     else:
         print("No retraining needed")
+        RETRAIN_FLAG.write_text("false")
 
 
 if __name__ == "__main__":

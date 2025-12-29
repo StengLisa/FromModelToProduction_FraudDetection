@@ -1,0 +1,49 @@
+name: Deploy Model
+
+on:
+  workflow_run:
+    workflows: ["Monthly Training and Drift-Based Retraining"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download retrain flag
+        uses: actions/download-artifact@v4
+        with:
+          name: retrain-flag
+          path: .
+
+      - name: Read retrain flag
+        id: read_flag
+        run: echo "retrain=$(cat retrain_flag.txt)" >> $GITHUB_OUTPUT
+
+      - name: Stop if no retraining happened
+        if: ${{ steps.read_flag.outputs.retrain != 'true' }}
+        run: echo "No retraining occurred — skipping deployment."
+
+      - name: Checkout repository
+        if: ${{ steps.read_flag.outputs.retrain == 'true' }}
+        uses: actions/checkout@v4
+
+      - name: Download trained model artifact
+        if: ${{ steps.read_flag.outputs.retrain == 'true' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: trained-model
+          path: api/models/
+
+      - name: Commit and push updated model
+        if: ${{ steps.read_flag.outputs.retrain == 'true' }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add api/models/fraud_model.joblib
+          git commit -m "Deploy updated model after retraining"
+          git push
+        continue-on-error: true
+

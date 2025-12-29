@@ -53,6 +53,16 @@ jobs:
             echo "=== Running month $i ==="
             python -m src.pipeline_train --month $i --drift-threshold 0.05
           done
+
+      - name: Upload retrain flag
+        uses: actions/upload-artifact@v4
+        with:
+          name: retrain-flag
+          path: retrain_flag.txt
+
+      - name: Set retrain output
+        id: retrain_output
+        run: echo "retrain=$(cat retrain_flag.txt)" >> $GITHUB_OUTPUT 
  
       - name: Upload trained model
         uses: actions/upload-artifact@v4
