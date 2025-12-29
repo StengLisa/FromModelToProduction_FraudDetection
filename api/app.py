@@ -15,7 +15,7 @@ mlflow.set_tracking_uri(f"file:{os.path.join(PROJECT_ROOT, 'mlruns')}")
 
 
 # Load model & preprocessor
-model_path = os.path.join(PROJECT_ROOT, "models", "fraud_model_final.joblib")
+model_path = os.path.join(PROJECT_ROOT, "models", "fraud_model.joblib")
 artifact = joblib.load(model_path)
 preprocessor = artifact["preprocessor"]
 model = artifact["model"]
