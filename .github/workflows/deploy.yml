@@ -6,9 +6,9 @@ on:
     types:
       - completed
 
-  permissions:
-    actions: read
-    contents: read
+permissions:
+  actions: read
+  contents: read
 
 jobs:
   deploy:
