@@ -7,6 +7,7 @@ from src.train_final import run_training
 
 BASELINE_STATS = Path("artifacts/baseline_stats.parquet")
 DRIFT_LOG = Path("artifacts/drift_log.csv")
+RETRAIN_FLAG = Path("retrain_flag.txt")
 
 
 def compute_stats(df):
@@ -81,6 +82,9 @@ def simulate_monthly_data(df, month):
 
 def main(month, drift_threshold):
     Path("artifacts").mkdir(exist_ok=True)
+
+    # Reset retrain flag at the start of each run 
+    RETRAIN_FLAG.write_text("false")
 
     # Load data
     base_df = pd.read_csv("data/fraud_transactions_small.csv")
