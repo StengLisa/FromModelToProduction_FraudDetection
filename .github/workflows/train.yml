@@ -17,7 +17,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -55,15 +57,13 @@ jobs:
             python -m src.pipeline_train --month $i --drift-threshold 0.05
           done
 
-      - name: Upload retrain flag
-        uses: actions/upload-artifact@v4
-        with:
-          name: retrain-flag
-          path: retrain_flag.txt
-
-      - name: Set retrain output
-        id: retrain_output
-        run: echo "retrain=$(cat retrain_flag.txt)" >> $GITHUB_OUTPUT 
+      - name: Write retrain flag into repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add state/retrain_flag.txt
+          git commit -m "Update retrain flag after training" || echo "No changes to commit"
+          git push 
  
       - name: Upload trained model
         uses: actions/upload-artifact@v4

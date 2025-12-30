@@ -8,7 +8,7 @@ on:
 
 permissions:
   actions: read
-  contents: read
+  contents: write
 
 jobs:
   deploy:
@@ -16,26 +16,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Wait for artifacts to be ready
-        run: sleep 10
-
-      - name: Download retrain flag
-        uses: actions/download-artifact@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          name: retrain-flag
-          path: .
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Read retrain flag
         id: read_flag
-        run: echo "retrain=$(cat retrain_flag.txt)" >> $GITHUB_OUTPUT
+        run: echo "retrain=$(cat state/retrain_flag.txt)" >> $GITHUB_OUTPUT
 
-      - name: Stop if no retraining happened
+      - name: Stop if no retraining hapened
         if: ${{ steps.read_flag.outputs.retrain != 'true' }}
         run: echo "No retraining occurred — skipping deployment."
-
-      - name: Checkout repository
-        if: ${{ steps.read_flag.outputs.retrain == 'true' }}
-        uses: actions/checkout@v4
 
       - name: Download trained model artifact
         if: ${{ steps.read_flag.outputs.retrain == 'true' }}
@@ -50,7 +42,6 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add api/models/fraud_model.joblib
-          git commit -m "Deploy updated model after retraining"
+          git commit -m "Deploy updated model after retraining" || echo "No changes to commit"
           git push
-        continue-on-error: true
 
