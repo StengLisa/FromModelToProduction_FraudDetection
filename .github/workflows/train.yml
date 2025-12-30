@@ -12,6 +12,7 @@ on:
 
 jobs:
   train:
+    name: Train Model
     runs-on: ubuntu-latest
 
     steps:
