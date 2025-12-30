@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Wait for artifacts to be ready
+        run: sleep 10
+
       - name: Download retrain flag
         uses: actions/download-artifact@v4
         with:
