@@ -42,16 +42,17 @@ jobs:
             echo "simulate=${{ github.event.inputs.simulate_year }}" >> $GITHUB_OUTPUT
           fi
 
-      - name: Run monthly training OR full-year simulation
-        id: training
+      - name: Run full-year simulation
+        if: ${{ steps.mode.outputs.simulate == 'true' }}
         run: |
-          if [ "${{ steps.mode.outputs.simulate }}" = "true" ]; then
-            echo "Running full-year simulation..."
-            python -m src.pipeline_train --simulate-year true
-          else
-            echo "Running monthly training..."
-            python -m src.pipeline_train --simulate-year false
-          fi
+          echo "Running full-year simulation..."
+          python -m src.pipeline_train --simulate-year true
+
+      - name: Run monthly training
+        if: ${{ steps.mode.outputs.simulate != 'true' }}
+        run: |
+          echo "Running monthly training..."
+          python -m src.pipeline_train --simulate-year false
 
       - name: Check retrain flag
         id: retrain
