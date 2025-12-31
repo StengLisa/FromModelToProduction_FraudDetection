@@ -64,7 +64,15 @@ jobs:
             cp retrain_flag.txt state/retrain_flag.txt
           else
             echo "false" > state/retrain_flag.txt
-          fi 
+          fi
+
+      - name: Commit retrain flag
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add state/retrain_flag.txt
+          git commit -m "Update retrain flag after training" || echo "No changes to commit"
+          git push 
  
       - name: Upload trained model
         uses: actions/upload-artifact@v4
