@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
   train:
@@ -105,6 +106,7 @@ jobs:
 
       - name: Trigger deployment workflow
         run: |
+          sleep 5
           curl -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
