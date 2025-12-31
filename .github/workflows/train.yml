@@ -61,9 +61,9 @@ jobs:
         run: |
           mkdir -p state
           if [ -f retrain_flag.txt ]; then
-            cp retrain_flag.txt state/retrain_flag.txt
+            echo "$(cat retrain_flag.txt) $(date -u +"%Y-%m-%dT%H:%M:%SZ")" > state/retrain_flag.txt
           else
-            echo "false" > state/retrain_flag.txt
+            echo "false $(date -u +"%Y-%m-%dT%H:%M:%SZ")" > state/retrain_flag.txt
           fi
 
       - name: Commit retrain flag
@@ -72,6 +72,7 @@ jobs:
           git config user.email "github-actions@github.com"
           git add state/retrain_flag.txt
           git commit -m "Update retrain flag after training" || echo "No changes to commit"
+          git pull --rebase origin main
           git push 
  
       - name: Upload trained model
