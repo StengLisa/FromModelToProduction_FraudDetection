@@ -46,7 +46,7 @@ jobs:
         if: ${{ steps.set-month.outputs.month != '-1' }}
         run: |
           echo "Running training for month ${{ steps.set-month.outputs.month }}"
-          python -m src.pipeline_train --month ${{ steps.set-month.outputs.month }} --drift-threshold 0.05
+          python -m src.pipeline_train --month ${{ steps.set-month.outputs.month }} --drift-threshold 0.01
 
       - name: Run full 12-month simulation
         if: ${{ steps.set-month.outputs.month == '-1' }}
