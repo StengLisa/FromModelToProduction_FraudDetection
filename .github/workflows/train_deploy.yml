@@ -1,0 +1,82 @@
+name: Monthly Training, Drift Detection, and Deployment
+
+on:
+  schedule:
+    - cron: "0 0 1 * *"   # Run on the 1st of every month
+  workflow_dispatch:
+    inputs:
+      simulate_year:
+        description: "Simulate full year of data? (true/false)"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+
+jobs:
+  train_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Determine training mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "simulate=false" >> $GITHUB_OUTPUT
+          else
+            echo "simulate=${{ github.event.inputs.simulate_year }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run monthly training OR full-year simulation
+        id: training
+        run: |
+          if [ "${{ steps.mode.outputs.simulate }}" = "true" ]; then
+            echo "Running full-year simulation..."
+            python -m src.pipeline_train --simulate-year true
+          else
+            echo "Running monthly training..."
+            python -m src.pipeline_train --simulate-year false
+          fi
+
+      - name: Check retrain flag
+        id: retrain
+        run: |
+          flag=$(cat state/retrain_flag.txt | cut -d' ' -f1)
+          echo "retrain=$flag" >> $GITHUB_OUTPUT
+
+      - name: Stop if no retraining is needed
+        if: ${{ steps.retrain.outputs.retrain != 'true' }}
+        run: echo "No drift detected — skipping deployment."
+
+      - name: Deploy updated model
+        if: ${{ steps.retrain.outputs.retrain == 'true' }}
+        run: |
+          echo "Deploying updated model..."
+          cp models/fraud_model.joblib api/models/fraud_model.joblib
+          cp config/threshold.json api/config/threshold.json
+
+      - name: Commit deployment changes
+        if: ${{ steps.retrain.outputs.retrain == 'true' }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add api/models/fraud_model.joblib
+          git add api/config/threshold.json
+          git commit -m "Deploy updated model after retraining" || echo "No changes to commit"
+          git push
+
