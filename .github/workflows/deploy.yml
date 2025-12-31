@@ -1,9 +1,8 @@
 name: Deploy Model
 
 on:
-  push:
-    paths:
-      - state/retrain_flag.txt
+  repository_dispatch:
+    types: [deploy_model]
 
 permissions:
   actions: read
@@ -31,6 +30,7 @@ jobs:
         if: ${{ steps.read_flag.outputs.retrain == 'true' }}
         uses: actions/download-artifact@v4
         with:
+          run-id: ${{ github.event.client_payload.run_id }}
           name: trained-model
           path: api/models/
 
