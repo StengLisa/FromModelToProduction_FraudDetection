@@ -1,10 +1,9 @@
 name: Deploy Model
 
 on:
-  workflow_run:
-    workflows: ["Monthly Training and Drift-Based Retraining"]
-    types:
-      - completed
+  push:
+    paths:
+      - state/retrain_flag.txt
 
 permissions:
   actions: read
