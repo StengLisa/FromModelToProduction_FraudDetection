@@ -2,7 +2,7 @@ name: Monthly Training, Drift Detection, and Deployment
 
 on:
   schedule:
-    - cron: "0 0 1 * *"   # Run on the 1st of every month
+    - cron: "0 0 1 * *"
   workflow_dispatch:
     inputs:
       simulate_year:
@@ -42,22 +42,32 @@ jobs:
             echo "simulate=${{ github.event.inputs.simulate_year }}" >> $GITHUB_OUTPUT
           fi
 
+      - name: Determine month
+        id: month
+        if: ${{ steps.mode.outputs.simulate != 'true' }}
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            echo "month=$(date +%-m)" >> $GITHUB_OUTPUT
+          else
+            echo "month=0" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run full-year simulation
         if: ${{ steps.mode.outputs.simulate == 'true' }}
         run: |
-          echo "Running full-year simulation..."
-          python -m src.pipeline_train --simulate-year true
+          for i in {0..12}; do
+            python -m src.pipeline_train --month $i
+          done
 
       - name: Run monthly training
         if: ${{ steps.mode.outputs.simulate != 'true' }}
         run: |
-          echo "Running monthly training..."
-          python -m src.pipeline_train --simulate-year false
+          python -m src.pipeline_train --month ${{ steps.month.outputs.month }}
 
       - name: Check retrain flag
         id: retrain
         run: |
-          flag=$(cat state/retrain_flag.txt | cut -d' ' -f1)
+          flag=$(cut -d' ' -f1 state/retrain_flag.txt)
           echo "retrain=$flag" >> $GITHUB_OUTPUT
 
       - name: Stop if no retraining is needed
@@ -67,7 +77,6 @@ jobs:
       - name: Deploy updated model
         if: ${{ steps.retrain.outputs.retrain == 'true' }}
         run: |
-          echo "Deploying updated model..."
           cp models/fraud_model.joblib api/models/fraud_model.joblib
           cp config/threshold.json api/config/threshold.json
 
@@ -80,4 +89,5 @@ jobs:
           git add api/config/threshold.json
           git commit -m "Deploy updated model after retraining" || echo "No changes to commit"
           git push
+
 
