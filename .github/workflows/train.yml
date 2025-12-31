@@ -72,6 +72,7 @@ jobs:
           git config user.email "github-actions@github.com"
           git add state/retrain_flag.txt
           git commit -m "Update retrain flag after training" || echo "No changes to commit"
+          git reset --hard
           git pull --rebase origin main
           git push 
  
