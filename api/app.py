@@ -7,12 +7,22 @@ import mlflow
 from mlflow.tracking import MlflowClient
 
 # Project root 
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-
+#PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # MLflow tracking URI setup
-mlflow.set_tracking_uri(f"file:{os.path.join(PROJECT_ROOT, 'mlruns')}")
+#mlflow.set_tracking_uri(f"file:{os.path.join(PROJECT_ROOT, 'mlruns')}")
 
+#current_dir = os.path.dirname(os.path.abspath(__file__))
+#project_root = os.path.dirname(current_dir)
+#tracking_dir = os.path.join(project_root, "mlruns")
+
+#mlflow.set_tracking_uri(f"file:{tracking_dir}")
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(current_dir) 
+
+tracking_dir = os.path.join(PROJECT_ROOT, "mlruns")
+mlflow.set_tracking_uri(f"file:{tracking_dir}")
 
 # Load model & preprocessor
 model_path = os.path.join(PROJECT_ROOT, "models", "fraud_model.joblib")
