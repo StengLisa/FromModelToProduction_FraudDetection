@@ -88,4 +88,10 @@ jobs:
           git commit -m "Deploy updated model after retraining" || echo "No changes to commit"
           git push
 
+      - name: Upload MLflow run artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: mlflow-run
+          path: mlruns
+
 
