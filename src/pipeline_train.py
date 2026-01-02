@@ -83,8 +83,9 @@ def simulate_monthly_data(df, month):
 def main(month, drift_threshold, force_retrain):
     Path("artifacts").mkdir(exist_ok=True)
 
-    # Reset retrain flag at the start of each run 
-    RETRAIN_FLAG.write_text("false")
+    # Reset retrain flag for month 0; overwrite if retraining happens 
+    if month == 0:
+        RETRAIN_FLAG.write_text("false")
 
     # Load data
     base_df = pd.read_csv("data/fraud_transactions_small.csv")
