@@ -7,7 +7,7 @@ from src.train_final import run_training
 
 BASELINE_STATS = Path("artifacts/baseline_stats.parquet")
 DRIFT_LOG = Path("artifacts/drift_log.csv")
-RETRAIN_FLAG = Path("retrain_flag.txt")
+RETRAIN_FLAG = Path("artifacts/retrain_flag.txt")
 
 
 def compute_stats(df):

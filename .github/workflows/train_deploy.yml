@@ -80,7 +80,7 @@ jobs:
       - name: Check retrain flag
         id: retrain
         run: |
-          flag=$(cut -d' ' -f1 retrain_flag.txt)
+          flag=$(cut -d' ' -f1 artifacts/retrain_flag.txt)
           echo "retrain=$flag" >> $GITHUB_OUTPUT
         
       - name: Stop if no retraining is needed
