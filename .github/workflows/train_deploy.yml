@@ -92,6 +92,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mlflow-run
-          path: mlruns
+          path: ${{ github.workspace }}/mlruns
 
 
