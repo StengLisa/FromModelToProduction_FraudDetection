@@ -80,7 +80,7 @@ def simulate_monthly_data(df, month):
 
 # Main pipeline
 
-def main(month, drift_threshold):
+def main(month, drift_threshold, force_retrain):
     Path("artifacts").mkdir(exist_ok=True)
 
     # Reset retrain flag at the start of each run 
@@ -113,7 +113,7 @@ def main(month, drift_threshold):
 
     print(f"Month {month}: drift = {drift_value}")
 
-    retrain = drift_value > drift_threshold
+    retrain = force_retrain or (drift_value > drift_threshold)
 
     # Log drift
     if DRIFT_LOG.exists():
@@ -156,5 +156,8 @@ if __name__ == "__main__":
     # Default threshold for drift
     parser.add_argument("--drift-threshold", type=float, default=0.05)
 
+    # Force retrain (for monthly, time-based retraining) 
+    parser.add_argument("--force-retrain", action="store_true")
+
     args = parser.parse_args()
-    main(args.month, args.drift_threshold)
+    main(args.month, args.drift_threshold, args.force_retrain)
