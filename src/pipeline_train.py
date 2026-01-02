@@ -147,7 +147,6 @@ def main(month, drift_threshold, force_retrain):
 
     else:
         print("No retraining needed")
-        RETRAIN_FLAG.write_text("false")
 
 
 if __name__ == "__main__":
