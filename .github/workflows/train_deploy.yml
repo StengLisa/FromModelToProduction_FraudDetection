@@ -2,7 +2,7 @@ name: Monthly Training, Drift Detection, and Deployment
 
 on:
   schedule:
-    - cron: "0 0 5 * *"
+    - cron: "0 0 1 * *"
   workflow_dispatch:
     inputs: 
       simulate_year:
