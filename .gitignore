@@ -18,7 +18,6 @@ data/*
 !data/fraud_transactions_small.csv
 
 # MLflow
-mlruns/
 mlflow.db
 
 # Models
