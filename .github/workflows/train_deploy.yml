@@ -101,11 +101,14 @@ jobs:
           git commit -m "Deploy updated model after retraining" || echo "No changes to commit"
           git push
 
-      - name: Upload MLflow run artifacts
-        uses: actions/upload-artifact@v4
-        with: 
-          name: mlflow-run
-          path: ${{ github.workspace }}/mlruns
+      - name: Commit updated Mlflow runs
+        if: ${{ steps.retrain.outputs.retrain == 'true' }}
+        run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        git add mlruns/
+        git commit -m "Update MLflow runs"
+        git push
 
 
 
