@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/LisaSteng/ModelToProduction_FraudDetection/mlruns/153083297474426502/8b4ccd91cedd402292e42c64053686ca/artifacts
+end_time: 1767306000320
+entry_point_name: ''
+experiment_id: '153083297474426502'
+lifecycle_stage: active
+run_id: 8b4ccd91cedd402292e42c64053686ca
+run_name: lgbm_training
+run_uuid: 8b4ccd91cedd402292e42c64053686ca
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1767305996091
+status: 3
+tags: []
+user_id: LisaSteng
