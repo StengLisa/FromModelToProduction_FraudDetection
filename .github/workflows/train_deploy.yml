@@ -92,22 +92,19 @@ jobs:
         run: |
           echo "Model saved to models/fraud_model.joblib — ready for commit."
         
-      - name: Commit deployment changes
-        if: ${{ steps.retrain.outputs.retrain == 'true' }}
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add models/fraud_model.joblib
-          git commit -m "Deploy updated model after retraining" || echo "No changes to commit"
-          git push
-
-      - name: Commit updated Mlflow runs
+      - name: Commit updated model, MLflow runs, artifacts, and config
         if: ${{ steps.retrain.outputs.retrain == 'true' }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
+
+          git add models/
           git add mlruns/
-          git commit -m "Update MLflow runs"
+          git add artifacts/
+          git add config/
+
+          git diff --cached --quiet || git commit -m "Retrain: update model, MLflow runs, artifacts, and config for month ${{ steps.month.outputs.value }}"
+      
           git push
 
 
