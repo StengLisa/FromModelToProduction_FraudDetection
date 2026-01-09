@@ -1,0 +1,6 @@
+artifact_location: file:///home/runner/work/FromModelToProduction_FraudDetection/FromModelToProduction_FraudDetection/mlruns/265336601928416328
+creation_time: 1767976203182
+experiment_id: '265336601928416328'
+last_update_time: 1767976203182
+lifecycle_stage: active
+name: fraud_detection_experiment
