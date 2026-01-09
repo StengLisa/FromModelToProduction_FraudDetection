@@ -7,7 +7,6 @@ import hashlib
 from datetime import datetime
 import numpy as np
 import matplotlib.pyplot as plt
-import tempfile
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
     roc_auc_score,
@@ -94,7 +93,6 @@ def run_training(data_path, register_name, threshold_config, retrain_reason="man
 
     print(f"\nOptimal threshold found: {best_threshold:.4f} (F1={best_f1:.4f})")
 
-    # Use recalibrated threshold
     threshold = best_threshold
     y_pred = (y_pred_proba >= threshold).astype(int)
 
@@ -116,6 +114,12 @@ def run_training(data_path, register_name, threshold_config, retrain_reason="man
     # 8. MLflow logging
     mlflow.set_tracking_uri(f"file:{os.path.join(PROJECT_ROOT, 'mlruns')}")
     mlflow.set_experiment("fraud_detection_experiment")
+
+    # Ensure artifact directories exist
+    plots_dir = os.path.join(PROJECT_ROOT, "artifacts", "plots")
+    reports_dir = os.path.join(PROJECT_ROOT, "artifacts", "reports")
+    os.makedirs(plots_dir, exist_ok=True)
+    os.makedirs(reports_dir, exist_ok=True)
 
     with mlflow.start_run(run_name="lgbm_training"):
         # Log metrics
@@ -140,25 +144,24 @@ def run_training(data_path, register_name, threshold_config, retrain_reason="man
         # ROC curve
         RocCurveDisplay.from_predictions(y_test, y_pred_proba)
         plt.title("ROC Curve")
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-            plt.savefig(tmp.name)
-            mlflow.log_artifact(tmp.name, artifact_path="plots")
+        roc_path = os.path.join(plots_dir, "roc_curve.png")
+        plt.savefig(roc_path)
+        mlflow.log_artifact(roc_path, artifact_path="plots")
         plt.close()
 
         # Confusion matrix
         ConfusionMatrixDisplay.from_predictions(y_test, y_pred, normalize="true")
         plt.title("Confusion Matrix")
-        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-            plt.savefig(tmp.name)
-            mlflow.log_artifact(tmp.name, artifact_path="plots")
+        cm_path = os.path.join(plots_dir, "confusion_matrix.png")
+        plt.savefig(cm_path)
+        mlflow.log_artifact(cm_path, artifact_path="plots")
         plt.close()
 
         # Classification report
-        report_text = classification_report(y_test, y_pred)
-        with tempfile.NamedTemporaryFile("w", delete=False, suffix=".txt") as f:
-            f.write(report_text)
-            temp_path = f.name
-        mlflow.log_artifact(temp_path, artifact_path="reports")
+        report_path = os.path.join(reports_dir, "classification_report.txt")
+        with open(report_path, "w") as f:
+            f.write(classification_report(y_test, y_pred))
+        mlflow.log_artifact(report_path, artifact_path="reports")
 
         # Log model
         mlflow.sklearn.log_model(lgbm, register_name)
