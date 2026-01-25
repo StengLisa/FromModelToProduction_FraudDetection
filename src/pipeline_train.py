@@ -39,7 +39,6 @@ def simulate_monthly_data(df, month):
         if needed > 0 and len(fraud) > 0:
             extra = fraud.sample(needed, replace=True, random_state=month)
 
-            # Noise reduced again: 0.003 → 0.001
             noise_scale = 0.003
             for col in ["amount", "oldbalanceOrg", "newbalanceOrig",
                         "oldbalanceDest", "newbalanceDest"]:
