@@ -1,0 +1,15 @@
+artifact_uri: file:///home/runner/work/FromModelToProduction_FraudDetection/FromModelToProduction_FraudDetection/mlruns/265336601928416328/ce8c180b298b43d4b8024e9c84662544/artifacts
+end_time: 1769916039308
+entry_point_name: ''
+experiment_id: '265336601928416328'
+lifecycle_stage: active
+run_id: ce8c180b298b43d4b8024e9c84662544
+run_name: lgbm_training
+run_uuid: ce8c180b298b43d4b8024e9c84662544
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1769916036530
+status: 3
+tags: []
+user_id: runner
