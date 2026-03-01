@@ -1,0 +1,20 @@
+artifact_path: fraud_model
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.11.14
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.5.0
+mlflow_version: 2.16.0
+model_size_bytes: 2913648
+model_uuid: d18b5f35ff4646efbdc7181705a4ea89
+run_id: d467de0eea4f47cbab826d02bd26b196
+utc_time_created: '2026-03-01 03:16:29.400827'
